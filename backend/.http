@@ -1,0 +1,7 @@
+
+### Root of App
+GET http://localhost:3000/
+
+### Named Hello
+
+GET http://localhost:3000/joe

@@ -59,6 +59,11 @@ app.get("/", (req, res) => {
     res.send("Hello world!");
 });
 
+// define a route handler for the default home page
+app.get("/:name", (req, res) => {
+    res.send(`Hello there ${req.params.name}!`);
+});
+
 // start the Express server
 app.listen(port, () => {
     logger.info(`server started at http://localhost:${port}`);
