@@ -1,6 +1,12 @@
 import express from "express";
 import winston from 'winston';
+import mysql, { ConnectionConfig } from 'mysql';
+import dotenv from 'dotenv';
 
+// Load in environment variables
+dotenv.config();
+
+// Configure logging
 const logger = winston.createLogger({
     level: 'info',
     format: winston.format.json(),
@@ -25,8 +31,28 @@ if (process.env.NODE_ENV !== 'production') {
     }));
 }
 
+// Connect to our database
+const dbConfig: ConnectionConfig = {
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME
+};
+logger.info('DB Config ' + JSON.stringify(dbConfig));
+const con = mysql.createConnection(dbConfig);
+
+con.connect((err) => {
+    if (err) {
+        logger.error(err);
+        throw err;
+    }
+    logger.info("Connected to MySQL Database");
+});
+
+// Create the express REST application
+const DEFAULT_APP_PORT = 8080;
 const app = express();
-const port = 8080; // default port to listen
+const port = process.env.APP_PORT || DEFAULT_APP_PORT; // default port to listen
 
 // define a route handler for the default home page
 app.get("/", (req, res) => {
