@@ -1,7 +1,9 @@
 import express from "express";
+import cors from 'cors';
 import winston from 'winston';
 import mysql, { ConnectionConfig } from 'mysql';
 import dotenv from 'dotenv';
+import Player from 'shared/dist/Player';
 
 // Load in environment variables
 dotenv.config();
@@ -39,24 +41,36 @@ const dbConfig: ConnectionConfig = {
     database: process.env.DB_NAME
 };
 logger.info('DB Config ' + JSON.stringify(dbConfig));
-const con = mysql.createConnection(dbConfig);
+// const con = mysql.createConnection(dbConfig);
 
-con.connect((err) => {
-    if (err) {
-        logger.error(err);
-        throw err;
-    }
-    logger.info("Connected to MySQL Database");
-});
+// con.connect((err) => {
+//     if (err) {
+//         logger.error(err);
+//         throw err;
+//     }
+//     logger.info("Connected to MySQL Database");
+// });
 
 // Create the express REST application
-const DEFAULT_APP_PORT = 8080;
+const DEFAULT_APP_PORT = 5001;
 const app = express();
 const port = process.env.APP_PORT || DEFAULT_APP_PORT; // default port to listen
+
+// Good old CORS
+app.use(cors())
+app.options('*', cors());  // enable pre-flight
 
 // define a route handler for the default home page
 app.get("/", (req, res) => {
     res.send("Hello world!");
+});
+
+app.get('/players', (req, res) => {
+    const players: Player[] = [];
+
+    players.push({ name: 'Mr Sharp', favouriteGame: 'Tetris' }, { name: 'Jon B', favouriteGame: 'Smash Bro' })
+
+    res.send(players);
 });
 
 // define a route handler for the default home page
