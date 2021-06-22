@@ -41,15 +41,15 @@ const dbConfig: ConnectionConfig = {
     database: process.env.DB_NAME
 };
 logger.info('DB Config ' + JSON.stringify(dbConfig));
-// const con = mysql.createConnection(dbConfig);
+const con = mysql.createConnection(dbConfig);
 
-// con.connect((err) => {
-//     if (err) {
-//         logger.error(err);
-//         throw err;
-//     }
-//     logger.info("Connected to MySQL Database");
-// });
+con.connect((err) => {
+    if (err) {
+        logger.error(err);
+        throw err;
+    }
+    logger.info("Connected to MySQL Database");
+});
 
 // Create the express REST application
 const DEFAULT_APP_PORT = 5001;

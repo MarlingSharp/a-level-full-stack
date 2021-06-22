@@ -1,0 +1,81 @@
+body {
+    font-family: Quicksand, Helvetica, sans-serif;
+    background-color: #5b5ba5;
+}
+
+h1, h2, h3 {
+    color: #5b5ba5;
+    font-weight: bolder;
+    padding: 0.7rem 0;
+}
+
+h1 {
+    font-size: xx-large;
+}
+
+h2 {
+    font-size: x-large;
+}
+
+.container {
+    padding-right: 5rem;
+    padding-left: 5rem;
+    margin: 0 auto;
+    background-color: white;
+    display: block;
+    overflow: auto;
+}
+
+@media (min-width: 768px) {
+    .container {
+        width: 750px;
+    }
+}
+
+@media (min-width: 992px) {
+    .container {
+        width: 970px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .container {
+        width: 1170px;
+    }
+}
+
+.section-header h2 {
+    padding: 0.2rem 0.4rem;
+}
+
+.section-header__type {
+    display: inline-block;
+    color: white;
+    background-color: #5b5ba5;
+}
+
+.section-header__name {
+    display: inline-block;
+    color: #5b5ba5;
+}
+
+.step-instruction-container div {
+    display: grid;
+    grid-template-columns: 30% 40% 30%;
+    padding: 0.7rem;
+    border-bottom: solid thin black;
+}
+
+.step-instruction-container__heading span {
+    font-weight: bolder;
+}
+
+.step-instruction-container img {
+    display: block;
+    margin-top: 2rem;
+    width: 200px;
+}
+
+strong {
+    font-weight: bolder;
+}
