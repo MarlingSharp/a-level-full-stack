@@ -66,11 +66,16 @@ app.get("/", (req, res) => {
 });
 
 app.get('/players', (req, res) => {
-    const players: Player[] = [];
 
-    players.push({ name: 'Mr Sharp', favouriteGame: 'Tetris' }, { name: 'Jon B', favouriteGame: 'Smash Bro' })
+    // Query the database
+    con.query('SELECT name, favouriteGame FROM player', (error, results, fields) => {
+        if (error) throw error;
 
-    res.send(players);
+        // Convert the generic results into our Player class
+        const players: Player[] = results.map(({ name, favouriteGame }: any) => ({ name, favouriteGame }))
+
+        res.send(players);
+    });
 });
 
 // define a route handler for the default home page

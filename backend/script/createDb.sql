@@ -1,6 +1,10 @@
 DROP DATABASE marlinggame;
 
 CREATE DATABASE marlinggame;
+USE marlinggame;
 
-CREATE USER 'marling'@'localhost' IDENTIFIED BY 'marling-pw';
-GRANT ALL PRIVILEGES ON marlinggame.* TO 'marling'@'localhost' WITH GRANT OPTION;
+CREATE TABLE player (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    favouriteGame VARCHAR(255)
+);
