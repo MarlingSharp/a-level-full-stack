@@ -1,0 +1,1 @@
+const SERVICE_HOST = 'http://localhost:6007';
