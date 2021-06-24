@@ -74,7 +74,7 @@ app.get('/students', (req, res) => {
         if (error) throw error;
 
         // Convert the generic results into our Player class
-        const students: Student[] = results.map(({ name, age, house }: any) => new Student(name, age, house))
+        const students: Student[] = results.map(({ name, age, house }: any) => ({ name, age, house }))
 
         res.send(students);
     });
@@ -88,7 +88,7 @@ app.get('/subjects', (req, res) => {
         if (error) throw error;
 
         // Convert the generic results into our Player class
-        const subjects: Subject[] = results.map(({ name, teacher }: any) => new Subject(name, teacher))
+        const subjects: Subject[] = results.map(({ name, teacher }: any) => ({ name, teacher }))
 
         res.send(subjects);
     });
@@ -96,7 +96,8 @@ app.get('/subjects', (req, res) => {
 
 // Get a list of subjects and target grades for a given student
 app.get("/studiedBy/:studentId", (req, res) => {
-    // Query the database
+
+    // Query the database, using JOIN to reach across the thjree tables
     con.query(`SELECT student.name as student_name, subject.name as subject_name, studies.target_grade as target_grade FROM student
     INNER JOIN studies ON
         student.id = studies.student_id
@@ -113,6 +114,24 @@ app.get("/studiedBy/:studentId", (req, res) => {
 });
 
 // start the Express server
-app.listen(port, () => {
+const server = app.listen(port, () => {
     logger.info(`server started at http://localhost:${port}`);
 });
+
+const gracefulShutdown = () => {
+    console.log('Da fuq')
+    logger.info('SIGTERM signal received.');
+    logger.info('Closing http server.');
+    server.close(() => {
+        logger.info('Http server closed.');
+
+        logger.info('Closing Database Connection');
+        con.end(() => {
+            logger.info('Databaes Closed');
+        });
+    });
+};
+
+process.on('SIGTERM', gracefulShutdown);
+// process.on('SIGKILL', gracefulShutdown);
+// process.on('SIGINT', gracefulShutdown);
