@@ -5,6 +5,7 @@ import mysql, { ConnectionConfig } from 'mysql';
 import dotenv from 'dotenv';
 import Student from 'shared/dist/Student';
 import Subject from 'shared/dist/Subject';
+import ON_DEATH from 'death'; // this is intentionally ugly
 
 // Load in environment variables
 dotenv.config();
@@ -13,7 +14,6 @@ dotenv.config();
 const logger = winston.createLogger({
     level: 'info',
     format: winston.format.json(),
-    defaultMeta: { service: 'user-service' },
     transports: [
         //
         // - Write all logs with level `error` and below to `error.log`
@@ -118,20 +118,16 @@ const server = app.listen(port, () => {
     logger.info(`server started at http://localhost:${port}`);
 });
 
-const gracefulShutdown = () => {
-    console.log('Da fuq')
-    logger.info('SIGTERM signal received.');
+// Handle graceful shutdown
+ON_DEATH(() => {
+    logger.info('Close Program Signal Received.');
     logger.info('Closing http server.');
     server.close(() => {
         logger.info('Http server closed.');
 
         logger.info('Closing Database Connection');
         con.end(() => {
-            logger.info('Databaes Closed');
+            logger.info('Database Closed');
         });
     });
-};
-
-process.on('SIGTERM', gracefulShutdown);
-// process.on('SIGKILL', gracefulShutdown);
-// process.on('SIGINT', gracefulShutdown);
+});
