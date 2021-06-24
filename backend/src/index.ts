@@ -3,7 +3,8 @@ import cors from 'cors';
 import winston from 'winston';
 import mysql, { ConnectionConfig } from 'mysql';
 import dotenv from 'dotenv';
-import Player from 'shared/dist/Player';
+import Student from 'shared/dist/Student';
+import Subject from 'shared/dist/Subject';
 
 // Load in environment variables
 dotenv.config();
@@ -65,22 +66,50 @@ app.get("/", (req, res) => {
     res.send("Hello world!");
 });
 
-app.get('/players', (req, res) => {
+// Get the list of students
+app.get('/students', (req, res) => {
 
     // Query the database
-    con.query('SELECT name, favouriteGame FROM player', (error, results, fields) => {
+    con.query('SELECT name, age, house FROM student', (error, results, fields) => {
         if (error) throw error;
 
         // Convert the generic results into our Player class
-        const players: Player[] = results.map(({ name, favouriteGame }: any) => ({ name, favouriteGame }))
+        const students: Student[] = results.map(({ name, age, house }: any) => new Student(name, age, house))
 
-        res.send(players);
+        res.send(students);
     });
 });
 
-// define a route handler for the default home page
-app.get("/:name", (req, res) => {
-    res.send(`Hello there ${req.params.name}!`);
+// Get the list of subject
+app.get('/subjects', (req, res) => {
+
+    // Query the database
+    con.query('SELECT name, teacher FROM subject', (error, results, fields) => {
+        if (error) throw error;
+
+        // Convert the generic results into our Player class
+        const subjects: Subject[] = results.map(({ name, teacher }: any) => new Subject(name, teacher))
+
+        res.send(subjects);
+    });
+});
+
+// Get a list of subjects and target grades for a given student
+app.get("/studiedBy/:studentId", (req, res) => {
+    // Query the database
+    con.query(`SELECT student.name as student_name, subject.name as subject_name, studies.target_grade as target_grade FROM student
+    INNER JOIN studies ON
+        student.id = studies.student_id
+    INNER JOIN subject ON
+        studies.subject_id = subject.id
+    WHERE student.id = ${req.params.studentId};`, (error, results, fields) => {
+        if (error) throw error;
+
+        // Convert the generic results into our Player class
+        const studies: object[] = results.map(({ student_name, subject_name, target_grade }: any) => ({ student_name, subject_name, target_grade }))
+
+        res.send(studies);
+    });
 });
 
 // start the Express server

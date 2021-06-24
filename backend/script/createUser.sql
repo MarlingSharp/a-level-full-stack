@@ -1,2 +1,2 @@
+-- Register a user that our service layer can use to login
 CREATE USER 'marling'@'localhost' IDENTIFIED BY 'marling-pw';
-GRANT ALL PRIVILEGES ON marlinggame.* TO 'marling'@'localhost' WITH GRANT OPTION;
