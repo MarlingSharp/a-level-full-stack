@@ -12,7 +12,7 @@ USE school;
 
 -- Create our first table
 CREATE TABLE student (
-  id integer PRIMARY KEY,
+  id integer PRIMARY KEY AUTO_INCREMENT,
   name text NOT NULL,
   house text NOT NULL,
   age integer NOT NULL
@@ -20,7 +20,7 @@ CREATE TABLE student (
 
 
 CREATE TABLE subject (
-  id integer PRIMARY KEY,
+  id integer PRIMARY KEY AUTO_INCREMENT,
   name text NOT NULL,
   teacher text NOT NULL
 );

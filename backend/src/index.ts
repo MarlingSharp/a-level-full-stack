@@ -3,6 +3,7 @@ import cors from 'cors';
 import winston from 'winston';
 import mysql, { ConnectionConfig } from 'mysql';
 import dotenv from 'dotenv';
+import bodyParser from 'body-parser';
 import { Student, Subject, WhatTheyStudy, WhoStudies } from 'shared/dist';
 import ON_DEATH from 'death'; // this is intentionally ugly
 
@@ -60,6 +61,9 @@ const port = process.env.APP_PORT || DEFAULT_APP_PORT; // default port to listen
 app.use(cors())
 app.options('*', cors());  // enable pre-flight
 
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
 // define a route handler for the default home page
 app.get("/", (req, res) => {
     res.send("Hello world!");
@@ -70,7 +74,7 @@ app.get('/students', (req, res) => {
 
     // Query the database
     con.query('SELECT name, age, house FROM student', (error, results, fields) => {
-        if (error) res.status(500).send(error);
+        if (error) return res.status(500).send(error);
 
         // Convert the generic results into our Player class
         const students: Student[] = results.map(({ name, age, house }: any) => ({ name, age, house }))
@@ -79,12 +83,23 @@ app.get('/students', (req, res) => {
     });
 });
 
+// Add a new student
+app.post('/students', (req, res) => {
+
+    const sql = `INSERT INTO student (name, age, house) VALUES (?, ?, ?)`;
+    con.query(sql, [req.body.name, req.body.age, req.body.house], (error, result) => {
+        if (error) return res.status(500).send(error);
+
+        res.send('Student Added');
+    });
+})
+
 // Get the list of subject
 app.get('/subjects', (req, res) => {
 
     // Query the database
     con.query('SELECT name, teacher FROM subject', (error, results, fields) => {
-        if (error) res.status(500).send(error);
+        if (error) return res.status(500).send(error);
 
         // Convert the generic results into our Player class
         const subjects: Subject[] = results.map(({ name, teacher }: any) => ({ name, teacher }))
@@ -103,8 +118,8 @@ app.get("/studiedBy/:studentId", (req, res) => {
     INNER JOIN subject ON
         studies.subject_id = subject.id
     WHERE student.id = ${req.params.studentId};`, (error, results, fields) => {
-        if (error) res.status(500).send(error);
-        if (results.length === 0) res.sendStatus(404).send('This student is not recorded as studying any subjects');
+        if (error) return res.status(500).send(error);
+        if (results.length === 0) return res.sendStatus(404).send('This student is not recorded as studying any subjects');
 
         // Convert the generic results into our specific interface
         const whatTheyStudy: WhatTheyStudy = {
@@ -125,8 +140,8 @@ app.get("/whoStudies/:subjectId", (req, res) => {
     INNER JOIN student ON
         studies.student_id = student.id
     WHERE subject.id = ${req.params.subjectId};`, (error, results, fields) => {
-        if (error) res.status(500).send(error);
-        if (results.length === 0) res.sendStatus(404).send('Nobody studies this subject');
+        if (error) return res.status(500).send(error);
+        if (results.length === 0) return res.sendStatus(404).send('Nobody studies this subject');
 
         // Convert the generic results into our specific interface
         const whoStudies: WhoStudies = {
