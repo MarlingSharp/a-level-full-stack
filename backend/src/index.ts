@@ -3,8 +3,7 @@ import cors from 'cors';
 import winston from 'winston';
 import mysql, { ConnectionConfig } from 'mysql';
 import dotenv from 'dotenv';
-import Student from 'shared/dist/Student';
-import Subject from 'shared/dist/Subject';
+import { Student, Subject, WhatTheyStudy, WhoStudies } from 'shared/dist';
 import ON_DEATH from 'death'; // this is intentionally ugly
 
 // Load in environment variables
@@ -71,7 +70,7 @@ app.get('/students', (req, res) => {
 
     // Query the database
     con.query('SELECT name, age, house FROM student', (error, results, fields) => {
-        if (error) throw error;
+        if (error) res.status(500).send(error);
 
         // Convert the generic results into our Player class
         const students: Student[] = results.map(({ name, age, house }: any) => ({ name, age, house }))
@@ -85,7 +84,7 @@ app.get('/subjects', (req, res) => {
 
     // Query the database
     con.query('SELECT name, teacher FROM subject', (error, results, fields) => {
-        if (error) throw error;
+        if (error) res.status(500).send(error);
 
         // Convert the generic results into our Player class
         const subjects: Subject[] = results.map(({ name, teacher }: any) => ({ name, teacher }))
@@ -98,20 +97,47 @@ app.get('/subjects', (req, res) => {
 app.get("/studiedBy/:studentId", (req, res) => {
 
     // Query the database, using JOIN to reach across the thjree tables
-    con.query(`SELECT student.name as student_name, subject.name as subject_name, studies.target_grade as target_grade FROM student
+    con.query(`SELECT student.id as studentId, student.name as studentName, subject.name as subjectName, studies.target_grade as targetGrade FROM student
     INNER JOIN studies ON
         student.id = studies.student_id
     INNER JOIN subject ON
         studies.subject_id = subject.id
     WHERE student.id = ${req.params.studentId};`, (error, results, fields) => {
-        if (error) throw error;
+        if (error) res.status(500).send(error);
+        if (results.length === 0) res.sendStatus(404).send('This student is not recorded as studying any subjects');
 
-        // Convert the generic results into our Player class
-        const studies: object[] = results.map(({ student_name, subject_name, target_grade }: any) => ({ student_name, subject_name, target_grade }))
+        // Convert the generic results into our specific interface
+        const whatTheyStudy: WhatTheyStudy = {
+            studentId: results[0].studentId,
+            studentName: results[0].studentName,
+            subjects: results.map(({ subjectName, targetGrade }: any) => ({ subjectName, targetGrade }))
+        }
 
-        res.send(studies);
+        res.send(whatTheyStudy);
     });
 });
+
+// Get a list of students and target grades for a given subject
+app.get("/whoStudies/:subjectId", (req, res) => {
+    con.query(`SELECT subject.name as subjectName, student.name as studentName, studies.target_grade as targetGrade FROM subject
+    INNER JOIN studies ON
+        subject.id = studies.subject_id
+    INNER JOIN student ON
+        studies.student_id = student.id
+    WHERE subject.id = ${req.params.subjectId};`, (error, results, fields) => {
+        if (error) res.status(500).send(error);
+        if (results.length === 0) res.sendStatus(404).send('Nobody studies this subject');
+
+        // Convert the generic results into our specific interface
+        const whoStudies: WhoStudies = {
+            subjectId: results[0].subjectId,
+            subjectName: results[0].subjectName,
+            students: results.map(({ studentName, targetGrade }: any) => ({ studentName, targetGrade }))
+        }
+
+        res.send(whoStudies);
+    })
+})
 
 // start the Express server
 const server = app.listen(port, () => {
