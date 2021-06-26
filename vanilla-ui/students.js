@@ -13,8 +13,15 @@ class StudentRow extends HTMLDivElement {
         let nameSpan = document.createElement('span');
         nameSpan.innerText = this.getAttribute('studentName');
 
+        let ageSpan = document.createElement('span');
+        ageSpan.innerText = this.getAttribute('studentAge');
+
         let houseSpan = document.createElement('span');
         houseSpan.innerText = this.getAttribute('studentHouse');
+
+        let houseImageSpan = document.createElement('img');
+        houseImageSpan.classList.add('house-logo-sm')
+        houseImageSpan.src = `images/${this.getAttribute('studentHouse').toLowerCase()}.jpeg`
 
         let actionSpan = document.createElement('span');
         let cmdDelete = document.createElement('button');
@@ -24,7 +31,9 @@ class StudentRow extends HTMLDivElement {
 
         // Add these elements to our DOM
         this.appendChild(nameSpan);
+        this.appendChild(ageSpan);
         this.appendChild(houseSpan);
+        this.appendChild(houseImageSpan);
         this.appendChild(actionSpan);
     }
 }
@@ -43,6 +52,7 @@ function addStudentToUi(student) {
 
     // Set the properties on the student
     studentDiv.setAttribute('studentId', student.id);
+    studentDiv.setAttribute('studentAge', student.age);
     studentDiv.setAttribute('studentName', student.name);
     studentDiv.setAttribute('studentHouse', student.house);
 

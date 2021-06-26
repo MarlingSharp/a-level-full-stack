@@ -62,7 +62,7 @@ h2 {
 
 #student-container div {
     display: grid;
-    grid-template-columns: 40% 40% 20%;
+    grid-template-columns: 30% 10% 20% 20% 20%;
     padding: 0.7rem;
     border-bottom: solid thin black;
 }
@@ -73,6 +73,10 @@ h2 {
 
 strong {
     font-weight: bolder;
+}
+
+.house-logo-sm {
+    height: 20px;
 }
 
 /*
@@ -112,6 +116,10 @@ li a:hover {
 
 /* https://www.w3schools.com/css/tryit.asp?filename=trycss_forms */
 
+input {
+    font-family: Quicksand, Helvetica, sans-serif;
+}
+
 input[type=text], input[type=number], select {
     width: 100%;
     padding: 12px 20px;
@@ -134,7 +142,7 @@ input[type=submit] {
 }
 
 input[type=submit]:hover {
-    background-color: #45a049;
+    background-color: #282894;
 }
 
 /* div {
@@ -142,3 +150,16 @@ input[type=submit]:hover {
     background-color: #f2f2f2;
     padding: 20px;
 } */
+
+button {
+    background-color: #5b5ba5;
+    /* Purple */
+    border: none;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
