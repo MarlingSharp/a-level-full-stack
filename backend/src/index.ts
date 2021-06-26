@@ -4,7 +4,7 @@ import winston from 'winston';
 import mysql, { ConnectionConfig } from 'mysql';
 import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
-import { Student, Subject, WhatTheyStudy, WhoStudies } from 'shared/dist';
+import { Student, Subject, WhatTheyStudy, WhoStudies, DbStudent, DbSubject } from 'shared/dist';
 import ON_DEATH from 'death'; // this is intentionally ugly
 
 // Load in environment variables
@@ -73,11 +73,11 @@ app.get("/", (req, res) => {
 app.get('/students', (req, res) => {
 
     // Query the database
-    con.query('SELECT name, age, house FROM student', (error, results, fields) => {
+    con.query('SELECT id, name, age, house FROM student', (error, results, fields) => {
         if (error) return res.status(500).send(error);
 
         // Convert the generic results into our Player class
-        const students: Student[] = results.map(({ name, age, house }: any) => ({ name, age, house }))
+        const students: DbStudent[] = results.map(({ id, name, age, house }: any) => ({ id, name, age, house }))
 
         res.send(students);
     });
@@ -86,23 +86,41 @@ app.get('/students', (req, res) => {
 // Add a new student
 app.post('/students', (req, res) => {
 
-    const sql = `INSERT INTO student (name, age, house) VALUES (?, ?, ?)`;
+    const sql = 'INSERT INTO student (name, age, house) VALUES (?, ?, ?)';
     con.query(sql, [req.body.name, req.body.age, req.body.house], (error, result) => {
         if (error) return res.status(500).send(error);
 
-        res.send('Student Added');
+        const student: Student = {
+            name: req.body.name,
+            age: req.body.age,
+            house: req.body.house,
+        }
+
+        res.send({
+            id: result.insertId,
+            ...student
+        });
     });
-})
+});
+
+app.delete('/students/:id', (req, res) => {
+    const sql = 'DELETE FROM student WHERE id=?';
+    con.query(sql, [req.params.id], (error, results) => {
+        if (error) return res.status(500).send(error);
+
+        res.send(200);
+    })
+});
 
 // Get the list of subject
 app.get('/subjects', (req, res) => {
 
     // Query the database
-    con.query('SELECT name, teacher FROM subject', (error, results, fields) => {
+    con.query('SELECT id, name, teacher FROM subject', (error, results, fields) => {
         if (error) return res.status(500).send(error);
 
         // Convert the generic results into our Player class
-        const subjects: Subject[] = results.map(({ name, teacher }: any) => ({ name, teacher }))
+        const subjects: DbSubject[] = results.map(({ id, name, teacher }: any) => ({ id, name, teacher }))
 
         res.send(subjects);
     });
