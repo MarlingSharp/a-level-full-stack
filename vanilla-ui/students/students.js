@@ -1,5 +1,5 @@
 // Define a HTML Custom Element for our student rows
-class StudentRow extends HTMLDivElement {
+class StudentRow extends HTMLTableRowElement {
     static get observedAttributes() { return ['studentName', 'studentHouse']; }
 
     constructor() {
@@ -10,44 +10,57 @@ class StudentRow extends HTMLDivElement {
     connectedCallback() {
         let studentId = this.getAttribute('studentId');
 
-        let nameSpan = document.createElement('span');
+        let nameSpan = document.createElement('td');
         nameSpan.innerText = this.getAttribute('studentName');
 
-        let ageSpan = document.createElement('span');
+        let ageSpan = document.createElement('td');
         ageSpan.innerText = this.getAttribute('studentAge');
 
-        let houseSpan = document.createElement('span');
+        let houseSpan = document.createElement('td');
         houseSpan.innerText = this.getAttribute('studentHouse');
 
-        let houseImageSpan = document.createElement('img');
-        houseImageSpan.classList.add('house-logo-sm')
-        houseImageSpan.src = `images/${this.getAttribute('studentHouse').toLowerCase()}.jpeg`
+        let houseImageCell = document.createElement('td');
+        let houseImg = document.createElement('img');
+        houseImg.classList.add('house-logo-sm')
+        houseImg.src = `images/${this.getAttribute('studentHouse').toLowerCase()}.jpeg`
+        houseImageCell.appendChild(houseImg);
 
-        let actionSpan = document.createElement('span');
+        let actionSpan = document.createElement('td');
+
+        // Delete button
         let cmdDelete = document.createElement('button');
+        cmdDelete.classList.add('button');
         cmdDelete.innerText = 'Delete';
         cmdDelete.onclick = () => removeStudentFromREST(studentId);
+
+        // What they study link
+        let aWhatTheyStudy = document.createElement('a');
+        aWhatTheyStudy.href = `whatTheyStudy?studentId=${studentId}`
+        aWhatTheyStudy.innerText = 'Studies';
+        aWhatTheyStudy.classList.add('button')
+
         actionSpan.appendChild(cmdDelete);
+        actionSpan.appendChild(aWhatTheyStudy);
 
         // Add these elements to our DOM
         this.appendChild(nameSpan);
         this.appendChild(ageSpan);
         this.appendChild(houseSpan);
-        this.appendChild(houseImageSpan);
+        this.appendChild(houseImageCell);
         this.appendChild(actionSpan);
     }
 }
 
-customElements.define('student-row', StudentRow, { extends: 'div' });
+customElements.define('student-row', StudentRow, { extends: 'tr' });
 
 // Get a reference to the students container, we will need it in various places
-let studentsDiv = document.getElementById('student-container');
+let studentTableBody = document.getElementById('studentTableBody');
 
 const generateStudentId = (studentId) => `student-${studentId}`;
 
 function addStudentToUi(student) {
     // Create the 'row' for this student
-    let studentDiv = document.createElement('div', { is: 'student-row' });
+    let studentDiv = document.createElement('tr', { is: 'student-row' });
     studentDiv.setAttribute('id', generateStudentId(student.id));
 
     // Set the properties on the student
@@ -57,7 +70,7 @@ function addStudentToUi(student) {
     studentDiv.setAttribute('studentHouse', student.house);
 
     // Add this students div to the overall student container
-    studentsDiv.appendChild(studentDiv);
+    studentTableBody.appendChild(studentDiv);
 }
 
 function removeStudentFromUi(studentId) {

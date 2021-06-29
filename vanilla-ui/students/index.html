@@ -6,27 +6,32 @@
     <link rel='stylesheet' href='styles.css'>
 
     <script src='common.js'></script>
-    <script defer src='students.js'></script>
+    <script defer src='students/students.js'></script>
 </head>
 
 <body>
     <div id='container'>
         <h1>Students</h1>
         <ul>
-            <li><a href='index'>Home</a></li>
-            <li><a href='students' class="active">Students</a></li>
-            <li><a href='subjects'>Subjects</a></li>
+            <li><a href='../index'>Home</a></li>
+            <li><a class='active'>Students</a></li>
+            <li><a href='../subjects'>Subjects</a></li>
         </ul>
 
-        <div id='student-container'>
-            <div class='student-container__heading'>
-                <span>Name</span>
-                <span>Age</span>
-                <span>House</span>
-                <span>House Crest</span>
-                <span>Actions</span>
-            </div>
-        </div>
+        <table>
+            <thead>
+                <tr>
+                    <td>Name</td>
+                    <td>Age</td>
+                    <td>House</td>
+                    <td>Crest</td>
+                    <td>Actions</td>
+                </tr>
+            </thead>
+            <tbody id='studentTableBody'>
+
+            </tbody>
+        </table>
 
         <h2>Add New Student</h2>
         <form name='newStudent'>

@@ -1,0 +1,45 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Quicksand">
+    <link rel='stylesheet' href='reset.css'>
+    <link rel='stylesheet' href='styles.css'>
+
+    <script src='common.js'></script>
+    <script defer src='subjects/subjects.js'></script>
+</head>
+
+<body>
+    <div id='container'>
+        <h1>Subjects</h1>
+        <ul>
+            <li><a href='../index'>Home</a></li>
+            <li><a href='../students'>Students</a></li>
+            <li><a class="active">Subjects</a></li>
+        </ul>
+
+        <table>
+            <thead>
+                <tr>
+                    <td>Subject</td>
+                    <td>Teacher</td>
+                    <td>Actions</td>
+                </tr>
+            </thead>
+            <tbody id='subjectTableBody'>
+
+            </tbody>
+        </table>
+
+        <h2>Add New Subject</h2>
+        <form name='newSubject'>
+            <label>Name</label>
+            <input type='text' name='subjectName'>
+            <label>Teacher</label>
+            <input type='text' name='subjectTeacher'>
+            <input type='submit' value='Add Subject' onclick="cmdAddSubject(event)">
+        </form>
+    </div>
+</body>
+
+</html>

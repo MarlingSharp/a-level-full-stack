@@ -4,8 +4,10 @@ import winston from 'winston';
 import mysql, { ConnectionConfig } from 'mysql';
 import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
-import { Student, Subject, WhatTheyStudy, WhoStudies, DbStudent, DbSubject } from 'shared/dist';
 import ON_DEATH from 'death'; // this is intentionally ugly
+
+import studentApi from './studentApi';
+import subjectApi from './subjectApi';
 
 // Load in environment variables
 dotenv.config();
@@ -69,108 +71,9 @@ app.get("/", (req, res) => {
     res.send("Hello world!");
 });
 
-// Get the list of students
-app.get('/students', (req, res) => {
-
-    // Query the database
-    con.query('SELECT id, name, age, house FROM student', (error, results, fields) => {
-        if (error) return res.status(500).send(error);
-
-        // Convert the generic results into our Player class
-        const students: DbStudent[] = results.map(({ id, name, age, house }: any) => ({ id, name, age, house }))
-
-        res.send(students);
-    });
-});
-
-// Add a new student
-app.post('/students', (req, res) => {
-
-    const sql = 'INSERT INTO student (name, age, house) VALUES (?, ?, ?)';
-    con.query(sql, [req.body.name, req.body.age, req.body.house], (error, result) => {
-        if (error) return res.status(500).send(error);
-
-        const student: Student = {
-            name: req.body.name,
-            age: req.body.age,
-            house: req.body.house,
-        }
-
-        res.send({
-            id: result.insertId,
-            ...student
-        });
-    });
-});
-
-app.delete('/students/:id', (req, res) => {
-    const sql = 'DELETE FROM student WHERE id=?';
-    con.query(sql, [req.params.id], (error, results) => {
-        if (error) return res.status(500).send(error);
-
-        res.send(200);
-    })
-});
-
-// Get the list of subject
-app.get('/subjects', (req, res) => {
-
-    // Query the database
-    con.query('SELECT id, name, teacher FROM subject', (error, results, fields) => {
-        if (error) return res.status(500).send(error);
-
-        // Convert the generic results into our Player class
-        const subjects: DbSubject[] = results.map(({ id, name, teacher }: any) => ({ id, name, teacher }))
-
-        res.send(subjects);
-    });
-});
-
-// Get a list of subjects and target grades for a given student
-app.get("/studiedBy/:studentId", (req, res) => {
-
-    // Query the database, using JOIN to reach across the thjree tables
-    con.query(`SELECT student.id as studentId, student.name as studentName, subject.name as subjectName, studies.target_grade as targetGrade FROM student
-    INNER JOIN studies ON
-        student.id = studies.student_id
-    INNER JOIN subject ON
-        studies.subject_id = subject.id
-    WHERE student.id = ${req.params.studentId};`, (error, results, fields) => {
-        if (error) return res.status(500).send(error);
-        if (results.length === 0) return res.sendStatus(404).send('This student is not recorded as studying any subjects');
-
-        // Convert the generic results into our specific interface
-        const whatTheyStudy: WhatTheyStudy = {
-            studentId: results[0].studentId,
-            studentName: results[0].studentName,
-            subjects: results.map(({ subjectName, targetGrade }: any) => ({ subjectName, targetGrade }))
-        }
-
-        res.send(whatTheyStudy);
-    });
-});
-
-// Get a list of students and target grades for a given subject
-app.get("/whoStudies/:subjectId", (req, res) => {
-    con.query(`SELECT subject.name as subjectName, student.name as studentName, studies.target_grade as targetGrade FROM subject
-    INNER JOIN studies ON
-        subject.id = studies.subject_id
-    INNER JOIN student ON
-        studies.student_id = student.id
-    WHERE subject.id = ${req.params.subjectId};`, (error, results, fields) => {
-        if (error) return res.status(500).send(error);
-        if (results.length === 0) return res.sendStatus(404).send('Nobody studies this subject');
-
-        // Convert the generic results into our specific interface
-        const whoStudies: WhoStudies = {
-            subjectId: results[0].subjectId,
-            subjectName: results[0].subjectName,
-            students: results.map(({ studentName, targetGrade }: any) => ({ studentName, targetGrade }))
-        }
-
-        res.send(whoStudies);
-    })
-})
+// Setup the two REST APIs
+studentApi(con, app);
+subjectApi(con, app);
 
 // start the Express server
 const server = app.listen(port, () => {

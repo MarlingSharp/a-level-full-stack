@@ -60,17 +60,6 @@ h2 {
     color: #5b5ba5;
 }
 
-#student-container div {
-    display: grid;
-    grid-template-columns: 30% 10% 20% 20% 20%;
-    padding: 0.7rem;
-    border-bottom: solid thin black;
-}
-
-.student-container__heading span {
-    font-weight: bolder;
-}
-
 strong {
     font-weight: bolder;
 }
@@ -151,7 +140,7 @@ input[type=submit]:hover {
     padding: 20px;
 } */
 
-button {
+.button {
     background-color: #5b5ba5;
     /* Purple */
     border: none;
@@ -162,4 +151,14 @@ button {
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
+    margin-right: 1rem;
+}
+
+table {
+    width: 100%;
+}
+
+td {
+    padding: 0.7rem;
+    border-bottom: solid thin black;
 }
