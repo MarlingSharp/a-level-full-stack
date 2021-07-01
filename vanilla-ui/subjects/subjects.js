@@ -70,19 +70,6 @@ function subjectsRetreived(subjects) {
     subjects.forEach(addSubjectToUi)
 }
 
-function addSubjectToREST(subject) {
-    fetch(`${SERVICE_HOST}/subjects`, {
-        method: 'POST', // *GET, POST, PUT, DELETE, etc.
-        headers: {
-            'Content-Type': 'application/json'
-            // 'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: JSON.stringify(subject) // body data type must match "Content-Type" header
-    })
-        .then(response => response.json())
-        .then(addSubjectToUi);
-}
-
 function removeSubjectFromREST(subjectId) {
     fetch(`${SERVICE_HOST}/subjects/${subjectId}`, {
         method: 'DELETE'
@@ -94,16 +81,6 @@ function getSubjectsFromREST() {
     fetch(`${SERVICE_HOST}/subjects`)
         .then(response => response.json())
         .then(subjectsRetreived);
-}
-
-// Add a subject click handler
-function cmdAddSubject(e) {
-    let name = document.forms['newSubject']['subjectName'].value;
-    let teacher = document.forms['newSubject']['subjectTeacher'].value;
-
-    addSubjectToREST({ name, teacher });
-
-    e.preventDefault();
 }
 
 // Initial population of UI
