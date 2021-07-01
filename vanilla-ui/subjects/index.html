@@ -6,17 +6,15 @@
     <link rel='stylesheet' href='styles.css'>
 
     <script src='common.js'></script>
+    <script src='navBar.js'></script>
+    <script src='subjectApi.js'></script>
     <script defer src='subjects/subjects.js'></script>
 </head>
 
 <body>
     <div id='container'>
         <h1>Subjects</h1>
-        <ul>
-            <li><a href='../index'>Home</a></li>
-            <li><a href='../students'>Students</a></li>
-            <li><a class="active">Subjects</a></li>
-        </ul>
+        <ul is='nav-bar' activePage='subjects'></ul>
 
         <table>
             <thead>
@@ -30,8 +28,6 @@
 
             </tbody>
         </table>
-
-        <a class='button' href='addSubject'>Add New Subject</a>
     </div>
 </body>
 

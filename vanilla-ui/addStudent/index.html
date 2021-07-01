@@ -6,17 +6,15 @@
     <link rel='stylesheet' href='styles.css'>
 
     <script src='common.js'></script>
+    <script src='navBar.js'></script>
+    <script src='studentApi.js'></script>
     <script defer src='addStudent/addStudent.js'></script>
 </head>
 
 <body>
     <div id='container'>
         <h1>Students</h1>
-        <ul>
-            <li><a href='../index'>Home</a></li>
-            <li><a class='active'>Students</a></li>
-            <li><a href='../subjects'>Subjects</a></li>
-        </ul>
+        <ul is='nav-bar' activePage='addStudent'></ul>
 
         <h2>Add New Student</h2>
         <form name='newStudent'>

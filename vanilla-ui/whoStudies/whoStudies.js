@@ -7,20 +7,22 @@ const tableBody = document.getElementById('tableBody');
 function studiesRetrieved(whoStudies) {
     subjectNameH2.innerText = whoStudies.subjectName;
 
-    whoStudies.students.forEach(subject => {
+    whoStudies.students.forEach(student => {
         const newRow = document.createElement('tr');
+        newRow.setAttribute('id', generateStudyId(student.studentId, subjectId));
 
         const tdName = document.createElement('td');
-        tdName.innerText = subject.studentName;
+        tdName.innerText = student.studentName;
 
         const tdGrade = document.createElement('td');
-        tdGrade.innerText = subject.targetGrade;
+        tdGrade.innerText = student.targetGrade;
 
         const tdActions = document.createElement('td');
         const cmdDelete = document.createElement('button');
         cmdDelete.classList.add('button')
         cmdDelete.innerText = 'Delete';
-        // cmdDelete.onclick = () => removeStudentFromREST(subjectId);
+        cmdDelete.onclick = () => removeStudyFromREST(student.studentId, subjectId)
+            .then(() => removeStudyFromUi(student.studentId, subjectId));
         tdActions.appendChild(cmdDelete);
 
         newRow.appendChild(tdName);
@@ -31,11 +33,4 @@ function studiesRetrieved(whoStudies) {
     })
 }
 
-function getWhatTheyStudyFromREST() {
-    // Fetch all the students
-    fetch(`${SERVICE_HOST}/subjects/whoStudies/${subjectId}`)
-        .then(response => response.json())
-        .then(studiesRetrieved);
-}
-
-getWhatTheyStudyFromREST()
+getWhoStudiesFromREST(subjectId).then(studiesRetrieved);

@@ -46,28 +46,6 @@ const api = (con: Connection, app: Application) => {
             res.send(200);
         })
     });
-
-    // Get a list of students and target grades for a given subject
-    app.get("/subjects/whoStudies/:subjectId", (req, res) => {
-        con.query(`SELECT subject.name as subjectName, student.name as studentName, studies.target_grade as targetGrade FROM subject
-                    INNER JOIN studies ON
-                        subject.id = studies.subject_id
-                    INNER JOIN student ON
-                        studies.student_id = student.id
-                    WHERE subject.id = ${req.params.subjectId};`, (error, results, fields) => {
-            if (error) return res.status(500).send(error);
-            if (results.length === 0) return res.status(404).send('Nobody studies this subject');
-
-            // Convert the generic results into our specific interface
-            const whoStudies: WhoStudies = {
-                subjectId: results[0].subjectId,
-                subjectName: results[0].subjectName,
-                students: results.map(({ studentName, targetGrade }: any) => ({ studentName, targetGrade }))
-            }
-
-            res.send(whoStudies);
-        })
-    })
 }
 
 export default api;

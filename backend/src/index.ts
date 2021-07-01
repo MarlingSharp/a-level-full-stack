@@ -8,6 +8,7 @@ import ON_DEATH from 'death'; // this is intentionally ugly
 
 import studentApi from './studentApi';
 import subjectApi from './subjectApi';
+import studyApi from './studyApi';
 
 // Load in environment variables
 dotenv.config();
@@ -74,6 +75,7 @@ app.get("/", (req, res) => {
 // Setup the two REST APIs
 studentApi(con, app);
 subjectApi(con, app);
+studyApi(con, app);
 
 // start the Express server
 const server = app.listen(port, () => {

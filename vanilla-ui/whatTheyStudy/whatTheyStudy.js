@@ -10,7 +10,9 @@ function studiesRetrieved(whatTheyStudy) {
     studentNameH2.innerText = whatTheyStudy.studentName;
 
     whatTheyStudy.subjects.forEach(subject => {
+        console.log(subject);
         const newRow = document.createElement('tr');
+        newRow.setAttribute('id', generateStudyId(studentId, subject.subjectId));
 
         const tdName = document.createElement('td');
         tdName.innerText = subject.subjectName;
@@ -22,7 +24,8 @@ function studiesRetrieved(whatTheyStudy) {
         const cmdDelete = document.createElement('button');
         cmdDelete.classList.add('button')
         cmdDelete.innerText = 'Delete';
-        // cmdDelete.onclick = () => removeStudentFromREST(studentId);
+        cmdDelete.onclick = () => removeStudyFromREST(studentId, subject.subjectId)
+            .then(() => removeStudyFromUi(studentId, subject.subjectId));
         tdActions.appendChild(cmdDelete);
 
         newRow.appendChild(tdName);
@@ -33,11 +36,9 @@ function studiesRetrieved(whatTheyStudy) {
     })
 }
 
-function getWhatTheyStudyFromREST() {
-    // Fetch all the students
-    fetch(`${SERVICE_HOST}/students/whatTheyStudy/${studentId}`)
-        .then(response => response.json())
-        .then(studiesRetrieved);
+function removeStudyFromUi(studentId, subjectId) {
+    let studyDiv = document.getElementById(generateStudyId(studentId, subjectId));
+    studyDiv.remove();
 }
 
-getWhatTheyStudyFromREST()
+getWhatTheyStudyFromREST(studentId).then(studiesRetrieved);

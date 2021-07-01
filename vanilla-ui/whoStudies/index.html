@@ -6,15 +6,15 @@
     <link rel='stylesheet' href='styles.css'>
 
     <script src='common.js'></script>
+    <script src='navBar.js'></script>
+    <script src='studyApi.js'></script>
     <script defer src='whoStudies/whoStudies.js'></script>
 </head>
 
 <body>
     <div id='container'>
-        <h1>Who Studies</h1>
-        <a href='../subjects'>Back to Subjects</a>
-
-        <h2 id='subjectName'></h2>
+        <h1>Who Studies <span id='subjectName'></span></h1>
+        <ul is='nav-bar' activePage='subjects'></ul>
 
         <table>
             <thead>

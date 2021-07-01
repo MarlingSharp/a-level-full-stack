@@ -1,0 +1,34 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Quicksand">
+    <link rel='stylesheet' href='reset.css'>
+    <link rel='stylesheet' href='styles.css'>
+
+    <script src='common.js'></script>
+    <script src='navBar.js'></script>
+    <script src='studentApi.js'></script>
+    <script src='subjectApi.js'></script>
+    <script src='studyApi.js'></script>
+    <script defer src='addStudies/addStudies.js'></script>
+</head>
+
+<body>
+    <div id='container'>
+        <h1>Students</h1>
+        <ul is='nav-bar' activePage='addStudies'></ul>
+
+        <h2>Add New Study</h2>
+        <form name='newStudies'>
+            <label>Student</label>
+            <select name='studentId' id='cmbStudent'></select>
+            <label>Student</label>
+            <select name='subjectId' id='cmbSubject'></select>
+            <label>Target Grade</label>
+            <input type='text' name='targetGrade'>
+            <input type='submit' value='Add Studies' onclick="cmdAddStudies(event)">
+        </form>
+    </div>
+</body>
+
+</html>

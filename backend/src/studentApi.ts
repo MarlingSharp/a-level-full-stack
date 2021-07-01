@@ -1,7 +1,7 @@
 import { Application } from "express";
 import { Connection } from 'mysql';
 
-import { Student, DbStudent, WhatTheyStudy } from 'shared/dist';
+import { Student, DbStudent } from 'shared/dist';
 
 const api = (con: Connection, app: Application) => {
     // Get the list of students
@@ -46,30 +46,6 @@ const api = (con: Connection, app: Application) => {
 
             res.send(200);
         })
-    });
-
-    // Get a list of subjects and target grades for a given student
-    app.get("/students/whatTheyStudy/:studentId", (req, res) => {
-
-        // Query the database, using JOIN to reach across the thjree tables
-        con.query(`SELECT student.id as studentId, student.name as studentName, subject.name as subjectName, studies.target_grade as targetGrade FROM student
-                    INNER JOIN studies ON
-                        student.id = studies.student_id
-                    INNER JOIN subject ON
-                        studies.subject_id = subject.id
-                    WHERE student.id = ?;`, [req.params.studentId], (error, results, fields) => {
-            if (error) return res.status(500).send(error);
-            if (results.length === 0) return res.status(404).send('This student is not recorded as studying any subjects');
-
-            // Convert the generic results into our specific interface
-            const whatTheyStudy: WhatTheyStudy = {
-                studentId: results[0].studentId,
-                studentName: results[0].studentName,
-                subjects: results.map(({ subjectName, targetGrade }: any) => ({ subjectName, targetGrade }))
-            }
-
-            res.send(whatTheyStudy);
-        });
     });
 }
 

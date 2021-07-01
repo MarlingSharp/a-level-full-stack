@@ -20,7 +20,8 @@ class SubjectRow extends HTMLTableRowElement {
         let cmdDelete = document.createElement('button');
         cmdDelete.innerText = 'Delete';
         cmdDelete.classList.add('button')
-        cmdDelete.onclick = () => removeSubjectFromREST(subjectId);
+        cmdDelete.onclick = () => removeSubjectFromREST(subjectId)
+            .then(() => removeSubjectFromUi(subjectId));
 
         // Who studies lijnk
         let aWhoStudies = document.createElement('a');
@@ -70,18 +71,5 @@ function subjectsRetreived(subjects) {
     subjects.forEach(addSubjectToUi)
 }
 
-function removeSubjectFromREST(subjectId) {
-    fetch(`${SERVICE_HOST}/subjects/${subjectId}`, {
-        method: 'DELETE'
-    }).then(() => removeSubjectFromUi(subjectId));
-}
-
-function getSubjectsFromREST() {
-    // Fetch all the subjects
-    fetch(`${SERVICE_HOST}/subjects`)
-        .then(response => response.json())
-        .then(subjectsRetreived);
-}
-
 // Initial population of UI
-getSubjectsFromREST();
+getSubjectsFromREST().then(subjectsRetreived);;

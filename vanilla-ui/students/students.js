@@ -31,7 +31,7 @@ class StudentRow extends HTMLTableRowElement {
         let cmdDelete = document.createElement('button');
         cmdDelete.classList.add('button');
         cmdDelete.innerText = 'Delete';
-        cmdDelete.onclick = () => removeStudentFromREST(studentId);
+        cmdDelete.onclick = () => removeStudentFromREST(studentId).then(() => removeStudentFromUi(studentId));
 
         // What they study link
         let aWhatTheyStudy = document.createElement('a');
@@ -84,18 +84,5 @@ function studentsRetreived(students) {
     students.forEach(addStudentToUi)
 }
 
-function removeStudentFromREST(studentId) {
-    fetch(`${SERVICE_HOST}/students/${studentId}`, {
-        method: 'DELETE'
-    }).then(() => removeStudentFromUi(studentId));
-}
-
-function getStudentsFromREST() {
-    // Fetch all the students
-    fetch(`${SERVICE_HOST}/students`)
-        .then(response => response.json())
-        .then(studentsRetreived);
-}
-
 // Initial population of UI
-getStudentsFromREST();
+getStudentsFromREST().then(studentsRetreived);
