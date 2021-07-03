@@ -19,12 +19,6 @@ class StudentRow extends HTMLTableRowElement {
         let houseSpan = document.createElement('td');
         houseSpan.innerText = this.getAttribute('studentHouse');
 
-        let houseImageCell = document.createElement('td');
-        let houseImg = document.createElement('img');
-        houseImg.classList.add('house-logo-sm')
-        houseImg.src = `images/${this.getAttribute('studentHouse').toLowerCase()}.jpeg`
-        houseImageCell.appendChild(houseImg);
-
         let actionSpan = document.createElement('td');
 
         // Delete button
@@ -46,7 +40,6 @@ class StudentRow extends HTMLTableRowElement {
         this.appendChild(nameSpan);
         this.appendChild(ageSpan);
         this.appendChild(houseSpan);
-        this.appendChild(houseImageCell);
         this.appendChild(actionSpan);
     }
 }

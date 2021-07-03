@@ -72,7 +72,7 @@ const api = (con: Connection, app: Application) => {
         con.query(sql, [req.params.studentId, req.params.subjectId], (error, results) => {
             if (error) return res.status(500).send(error);
 
-            res.send(200);
+            res.sendStatus(200);
         })
     });
 }
