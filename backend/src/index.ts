@@ -6,9 +6,7 @@ import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import ON_DEATH from 'death'; // this is intentionally ugly
 
-import studentApi from './studentApi';
-import subjectApi from './subjectApi';
-import studyApi from './studyApi';
+import { studentApi, subjectApi, studyApi } from './api';
 
 // Load in environment variables
 dotenv.config();

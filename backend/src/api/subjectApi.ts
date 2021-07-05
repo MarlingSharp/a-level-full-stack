@@ -1,7 +1,7 @@
 import { Application } from "express";
 import { Connection } from 'mysql';
 
-import { Subject, DbSubject, WhoStudies } from 'shared/dist';
+import { Subject, DbSubject } from '../model';
 
 const api = (con: Connection, app: Application) => {
     // Get the list of subject

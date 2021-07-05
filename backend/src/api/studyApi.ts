@@ -1,7 +1,7 @@
 import { Application } from "express";
 import { Connection } from 'mysql';
 
-import { WhatTheyStudy, WhoStudies } from 'shared/dist';
+import { WhatTheyStudy, WhoStudies } from '../model';
 
 const api = (con: Connection, app: Application) => {
 
