@@ -5,7 +5,7 @@
 CREATE DATABASE school;
 
 -- Make sure that user can make changes to our application database
-GRANT ALL PRIVILEGES ON school.* TO 'marling'@'localhost' WITH GRANT OPTION;
+GRANT SELECT, INSERT, UPDATE, DELETE ON school.* TO 'marling'@'localhost' WITH GRANT OPTION;
 
 -- We need to be 'using' the specific database to make changes
 USE school;
